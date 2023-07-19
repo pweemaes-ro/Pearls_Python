@@ -70,9 +70,11 @@ def sign(i: int) -> float:
 def bitwise_xor(op1: int, op2: int) -> int:
 	"""Return the result of xor-ing of the operands."""
 	
-	if op1 == op2 == 0:
-		return 0
+	# if op1 == op2 == 0:
+	# 	return 0
 	nr_bits = max(op1.bit_length(), op2.bit_length())
+	if nr_bits == 0:
+		return 0
 	sign_value = (sign(op1) != sign(op2)) * shift_left(-1, nr_bits)
 	result = ''.join('1' if _get_bit(op1, i) != _get_bit(op2, i) else '0'
 	                 for i in range(nr_bits - 1, -1, -1))
@@ -83,9 +85,11 @@ def bitwise_xor(op1: int, op2: int) -> int:
 def bitwise_and(op1: int, op2: int) -> int:
 	"""Returns the integer obtained by bitwise and-ing int op1 and op2."""
 	
-	if op1 == op2 == 0:
-		return 0
+	# if op1 == op2 == 0:
+	# 	return 0
 	nr_bits = max(op1.bit_length(), op2.bit_length())
+	if nr_bits == 0:
+		return 0
 	sign_value = (op1 < 0 and op2 < 0) * shift_left(-1, nr_bits)
 	result = ''.join('1' if _get_bit(op1, i) == _get_bit(op2, i) == 1 else '0'
 	                 for i in range(nr_bits - 1, -1, -1))
@@ -96,9 +100,11 @@ def bitwise_and(op1: int, op2: int) -> int:
 def bitwise_or(op1: int, op2: int) -> int:
 	"""Return the result of or-ing of the operands."""
 	
-	if op1 == op2 == 0:
-		return 0
+	# if op1 == op2 == 0:
+	# 	return 0
 	nr_bits = max(op1.bit_length(), op2.bit_length())
+	if nr_bits == 0:
+		return 0
 	sign_value = (op1 < 0 or op2 < 0) * shift_left(-1, nr_bits)
 	result = ''.join('0' if _get_bit(op1, i) == _get_bit(op2, i) == 0 else '1'
 	                 for i in range(nr_bits - 1, -1, -1))
@@ -187,8 +193,12 @@ def _test_bitwise_and() -> None:
 	"""Tests the bitwise and function..."""
 	
 	r = range(-1000, 1000)
-	for i in sample(r, 250) + [-1, 0, 1]:
-		for j in sample(r, 250) + [-1, 0, 1]:
+	for i in sample(r, 250) + [-98765432198765432198765432198765432100,
+	                           -1, 0, 1,
+	                           98765432198765432198765432198765432100]:
+		for j in sample(r, 250) + [-98765432198765432198765432198765432100,
+		                           -1, 0, 1,
+		                           98765432198765432198765432198765432100]:
 			assert bitwise_and(i, j) == (i & j), \
 				f"bitwise_and error for {i=}, {j=}:"
 	
@@ -199,8 +209,12 @@ def _test_bitwise_or() -> None:
 	"""Tests the bitwise and function..."""
 	
 	r = range(-1000, 1000)
-	for i in sample(r, 250) + [-1, 0, 1]:
-		for j in sample(r, 250) + [-1, 0, 1]:
+	for i in sample(r, 250) + [-98765432198765432198765432198765432100,
+	                           -1, 0, 1,
+	                           98765432198765432198765432198765432100]:
+		for j in sample(r, 250) + [-98765432198765432198765432198765432100,
+		                           -1, 0, 1,
+		                           98765432198765432198765432198765432100]:
 			result = bitwise_or(i, j)
 			expected = i | j
 			assert result == expected, \
@@ -213,8 +227,12 @@ def _test_bitwise_xor() -> None:
 	"""Tests the bitwise and function..."""
 	
 	r = range(-1000, 1000)
-	for i in sample(r, 250) + [-1, 0, 1]:
-		for j in sample(r, 250) + [-1, 0, 1]:
+	for i in sample(r, 250) + [-98765432198765432198765432198765432100,
+	                           -1, 0, 1,
+	                           98765432198765432198765432198765432100]:
+		for j in sample(r, 250) + [-98765432198765432198765432198765432100,
+		                           -1, 0, 1,
+		                           98765432198765432198765432198765432100]:
 			result = bitwise_xor(i, j)
 			expected = i ^ j
 			assert result == expected, \
@@ -227,7 +245,9 @@ def _test_bitwise_not() -> None:
 	"""Tests the bitwise not function..."""
 	r = range(-1000, 1000)
 	
-	for i in sample(r, 250) + [-1, 0, 1]:
+	for i in sample(r, 250) + [-98765432198765432198765432198765432100,
+	                           -1, 0, 1,
+	                           98765432198765432198765432198765432100]:
 		result = bitwise_not(i)
 		expected = ~i
 		assert result == expected, \

@@ -1,47 +1,26 @@
 """Finding one (or all) missing ints in a list of bounded integers."""
 import operator
-from collections.abc import Iterable, Iterator
-from os import remove, rename
+from os import remove
 from random import sample, choice
 from string import ascii_lowercase
 
-from bit_array import set_bit, test_bytearray_bit
 
-
-def test_bit_2(i: int, bit_nr: int) -> int:
-	"""Return bit value of bit at 0-based position bit_nr."""
-	
-	return (i & (1 << bit_nr)) != 0
-
-
-def test_int_bit(i: int, offset: int) -> bool:
+def _test_int_bit(i: int, offset: int) -> bool:
 	return (i & (1 << offset)) != 0
-
-# Suppose you have a file with n-bit integers in random order, in which at
-# least one n-bit integer is missing. You're low on memory, but have enough
-# and sufficiently fast file storage space.
-
-
-# def get_all_missing(input_type: list[int], bits: int) -> Iterator[int]:
-# 	bit_array = bytearray((2 ** bits - 1 + 7) // 8)
-# 	for i in input_type:
-# 		set_bit(bit_array, i)
-#
-# 	for offset in range(2 ** bits):
-# 		if not test_bytearray_bit(bit_array, offset):
-# 			yield offset
-#
-# def split_tape(input_tape: list[int], bit_nr: int) -> int:
 
 
 def random_str(length: int) -> str:
+	"""Return a random string of specified length, existing of lowercase ascii
+	chars."""
+	
 	letters = ascii_lowercase
 	return '__' + ''.join(choice(letters) for _ in range(length))
 
 
-def split_tape(input_tape: str, bit_nr: int) -> int:
-
-	def _split_tape(input_name: str, bit_nr: int,
+def split_tape(i_tape: str, bit_nr: int) -> int:
+	"""Return a missing number WITHOUT reading ints from input in a list and
+	without using a bitmap. Is splits the tape in two new tapes..."""
+	def _split_tape(input_name: str, _bit_nr: int,
 	                delete_input_tape: bool = False) -> int:
 		output_names = [random_str(8) + ".txt", random_str(8) + ".txt"]
 		counts = [0, 0]
@@ -51,7 +30,7 @@ def split_tape(input_tape: str, bit_nr: int) -> int:
 			                open(output_names[1], "w")]
 			for int_str in input_tape:
 				value = int(int_str)
-				bit_value = test_bit_2(value, bit_nr)
+				bit_value = _test_int_bit(value, _bit_nr)
 				output_tapes[bit_value].write(int_str)
 				counts[bit_value] += 1
 			output_tapes[0].close()
@@ -66,7 +45,7 @@ def split_tape(input_tape: str, bit_nr: int) -> int:
 		if counts[0] == 0:
 			with open(output_names[1]) as f:
 				int_str = f.readline()
-			missing = bit_operator(int(int_str), 1 << bit_nr)
+			missing = bit_operator(int(int_str), 1 << _bit_nr)
 			remove(input_name)
 			remove(output_names[0])
 			remove(output_names[1])
@@ -75,9 +54,10 @@ def split_tape(input_tape: str, bit_nr: int) -> int:
 			if delete_input_tape:
 				remove(input_name)
 			remove(output_names[1])
-			return _split_tape(output_names[0], bit_nr - 1, True)
+			return _split_tape(output_names[0], _bit_nr - 1, True)
 	
-	return _split_tape(input_tape, bit_nr, False)
+	return _split_tape(i_tape, bit_nr)
+
 
 def split_list(input_tape: list[int], bit_nr: int) -> int:
 	"""Reads input_tape and splits it in two new tapes:
@@ -89,7 +69,7 @@ def split_list(input_tape: list[int], bit_nr: int) -> int:
 	
 	output_tapes: list[list[int]] = [[], []]
 	for i in input_tape:
-		output_tapes[test_bit_2(i, bit_nr)].append(i)
+		output_tapes[_test_int_bit(i, bit_nr)].append(i)
 	
 	bit_operator = operator.xor
 	if len(output_tapes[0]) > len(output_tapes[1]):

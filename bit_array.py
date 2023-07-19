@@ -38,7 +38,7 @@ def clear_bit(bit_array: bytearray, offset: int) -> None:
 	bit_array[offset // 8] ^= (1 << (offset % 8))
 
 
-def test_bytearray_bit(bit_array: bytearray, offset: int) -> bool:
+def _test_bit(bit_array: bytearray, offset: int) -> bool:
 	"""Return True if bit in bit_array at offset is set, else False. Raises
 	IndexError if offset out of bounds."""
 	
@@ -52,7 +52,7 @@ def bit_array_get(bit_array: bytearray, start: int, stop: int,
 	bit_array that have bit equal to bit_status."""
 
 	for bit_nr in range(stop - start):
-		if test_bytearray_bit(bit_array, bit_nr) == bit_status:
+		if _test_bit(bit_array, bit_nr) == bit_status:
 			yield start + bit_nr
 
 
