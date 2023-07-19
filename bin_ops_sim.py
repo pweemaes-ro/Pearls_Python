@@ -58,12 +58,12 @@ Python integers are not fixed size and are stored as follows:
 def _get_bit(i: int, bit_offset: int) -> int:
 	"""Return the value (0 or 1) of bit at bit_offset in i."""
 	
-	# shift the bit to offset 0, then see if resulting integer is even (bit = 0)
-	# or odd (bit = 1)
 	return shift_right(i, bit_offset) % 2
 
 
 def sign(i: int) -> float:
+	"""Returns 1.0 if i >= 0, else returns -1.0."""
+	
 	return copysign(1, i)
 
 
@@ -124,13 +124,13 @@ def shift_left(i: int, nr_bits: int) -> int:
 	"""Return the value of i after ARITHMATIC shift left by nr_bits.
 	Notice that arithmetic shift left is the same as logical shift left."""
 	
-	return i * 2 ** nr_bits
+	return int(i * 2 ** nr_bits)
 
 
 def shift_right(i: int, nr_bits: int) -> int:
 	"""Return the value of i after ARITHMATIC shift right by nr_bits."""
 	
-	return i // 2 ** nr_bits
+	return int(i // 2 ** nr_bits)
 
 
 def _test_all() -> None:

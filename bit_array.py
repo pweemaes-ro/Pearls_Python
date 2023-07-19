@@ -92,7 +92,7 @@ def bit_array_sort(start: int, stop: int, filename: str) -> Iterable[int]:
 
 if __name__ == "__main__":
 
-	def write_ints(start: int, stop: int, nr_ints, filename: str) -> None:
+	def write_ints(start: int, stop: int, nr_ints: int, filename: str) -> None:
 		"""Write nr_ints UNIQUE integers in range(start, stop) to filename."""
 		
 		with open(filename, "w") as f:

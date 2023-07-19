@@ -70,7 +70,7 @@ def split_tape(input_tape: str, bit_nr: int) -> int:
 			remove(input_name)
 			remove(output_names[0])
 			remove(output_names[1])
-			return missing
+			return int(missing)
 		else:
 			if delete_input_tape:
 				remove(input_name)
@@ -87,7 +87,7 @@ def split_list(input_tape: list[int], bit_nr: int) -> int:
 	   have bit at position bitnr equal to 1,
 	   """
 	
-	output_tapes = [[], []]
+	output_tapes: list[list[int]] = [[], []]
 	for i in input_tape:
 		output_tapes[test_bit_2(i, bit_nr)].append(i)
 	
@@ -101,14 +101,14 @@ def split_list(input_tape: list[int], bit_nr: int) -> int:
 		missing = bit_operator(output_tapes[1][0], bit_operand)
 		assert missing not in input_tape
 		# print(f"Required {nr_bits - bit_nr} passes")
-		return missing
+		return int(missing)
 	else:
 		return split_list(output_tapes[0], bit_nr - 1)
 
 	
 if __name__ == "__main__":
 
-	def write_ints(start: int, stop: int, nr_ints, filename: str) -> None:
+	def write_ints(start: int, stop: int, nr_ints: int, filename: str) -> None:
 		"""Write nr_ints UNIQUE integers in range(start, stop) to filename."""
 		
 		with open(filename, "w") as f:
