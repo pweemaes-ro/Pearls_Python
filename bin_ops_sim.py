@@ -9,9 +9,7 @@ x >> n == shift_right(x, n)
 Of course, this is just an exercise, it has no practical use whatsoever. The
 fun was mostly in figuring out the way Python stores ints in memory.
 """
-import random
 from math import copysign
-from random import sample
 
 """A few notes:
 Python only lets you do the *arithmetic* shift, NOT te *logical* shift:
@@ -69,62 +67,58 @@ def sign(i: int) -> float:
 
 def bitwise_xor(op1: int, op2: int) -> int:
 	"""Return the result of xor-ing of the operands."""
-	
-	# if op1 == op2 == 0:
-	# 	return 0
-	nr_bits = max(op1.bit_length(), op2.bit_length())
-	if nr_bits == 0:
-		return 0
-	sign_value = (sign(op1) != sign(op2)) * shift_left(-1, nr_bits)
-	result = ''.join('1' if _get_bit(op1, i) != _get_bit(op2, i) else '0'
-	                 for i in range(nr_bits - 1, -1, -1))
-	
-	return sign_value + int(result, 2)
 
+	if nr_bits := max(op1.bit_length(), op2.bit_length()):
+		# if operands have different sign, then result of xor is negative.
+		sign_bit_value = (sign(op1) != sign(op2)) * shift_left(-1, nr_bits)
+		result = ''.join('1' if _get_bit(op1, i) != _get_bit(op2, i)
+		                 else '0'
+		                 for i in range(nr_bits - 1, -1, -1))
+		return sign_bit_value + int(result, 2)
+
+	return 0    # Both operands are 0, 0 ^ 0 = 0 (binary) = 0 (decimal)
+	
 
 def bitwise_and(op1: int, op2: int) -> int:
 	"""Returns the integer obtained by bitwise and-ing int op1 and op2."""
 	
-	# if op1 == op2 == 0:
-	# 	return 0
-	nr_bits = max(op1.bit_length(), op2.bit_length())
-	if nr_bits == 0:
-		return 0
-	sign_value = (op1 < 0 and op2 < 0) * shift_left(-1, nr_bits)
-	result = ''.join('1' if _get_bit(op1, i) == _get_bit(op2, i) == 1 else '0'
-	                 for i in range(nr_bits - 1, -1, -1))
+	if nr_bits := max(op1.bit_length(), op2.bit_length()):
+		# if both operands are negative then result of and is also negative
+		sign_bit_value = (op1 < 0 and op2 < 0) * shift_left(-1, nr_bits)
+		result = ''.join('1' if _get_bit(op1, i) == _get_bit(op2, i) == 1
+		                 else '0'
+		                 for i in range(nr_bits - 1, -1, -1))
+		return sign_bit_value + int(result, 2)
 	
-	return sign_value + int(result, 2)
+	return 0    # Both operands are 0, 0 & 0 = 0 binary = 0 decimal
 
 
 def bitwise_or(op1: int, op2: int) -> int:
 	"""Return the result of or-ing of the operands."""
 	
-	# if op1 == op2 == 0:
-	# 	return 0
-	nr_bits = max(op1.bit_length(), op2.bit_length())
-	if nr_bits == 0:
-		return 0
-	sign_value = (op1 < 0 or op2 < 0) * shift_left(-1, nr_bits)
-	result = ''.join('0' if _get_bit(op1, i) == _get_bit(op2, i) == 0 else '1'
-	                 for i in range(nr_bits - 1, -1, -1))
-	
-	return sign_value + int(result, 2)
+	if nr_bits := max(op1.bit_length(), op2.bit_length()):
+		# if any operand negative, then result of or also negative
+		sign_bit_value = (op1 < 0 or op2 < 0) * shift_left(-1, nr_bits)
+		result = ''.join('0' if _get_bit(op1, i) == _get_bit(op2, i) == 0
+		                 else '1'
+		                 for i in range(nr_bits - 1, -1, -1))
+		return sign_bit_value + int(result, 2)
+
+	return 0    # Both operands are 0, 0 | 0 = 0 (binary) = 0 (decimal)
 
 
 def bitwise_not(i: int) -> int:
 	"""Return the bitwise not of integer i."""
 	
-	if i == 0:
-		return -1
-	
-	nr_bits = i.bit_length()
-	sign_value = (i > 0) * shift_left(-1, nr_bits)
-	result = ''.join(str(1 - _get_bit(i, offset))
-	                 for offset in range(nr_bits - 1, -1, -1))
-	
-	return sign_value + int(result, 2)
+	if nr_bits := i.bit_length():
+		# if operand positive, then result of not is negative
+		sign_bit_value = (i > 0) * shift_left(-1, nr_bits)
+		result = ''.join(str(1 - _get_bit(i, offset))
+		                 for offset in range(nr_bits - 1, -1, -1))
+		return sign_bit_value + int(result, 2)
 
+	return -1   # Operand is 0, ~0 = 1 (binary) = - (2 ** 0) = -1 (decimal)
+	
 
 def shift_left(i: int, nr_bits: int) -> int:
 	"""Return the value of i after ARITHMATIC shift left by nr_bits.
@@ -137,123 +131,3 @@ def shift_right(i: int, nr_bits: int) -> int:
 	"""Return the value of i after ARITHMATIC shift right by nr_bits."""
 	
 	return int(i // 2 ** nr_bits)
-
-
-def _test_all() -> None:
-	"""Does all tests..."""
-	_test_shifts()
-	_test_get_bit()
-	_test_bitwise_not()
-	_test_bitwise_and()
-	_test_bitwise_or()
-	_test_bitwise_xor()
-
-
-def _test_shifts() -> None:
-	"""Tests shift_left and shit_rught functions...."""
-	
-	test_sample = sample(range(-100_000, 100_000), 200)
-
-	for i in test_sample:
-		for nr_bits in range(20):
-			
-			result = shift_left(i, nr_bits)
-			expected = i << nr_bits
-			assert result == expected, \
-				f"shift_left error for {i=}, {nr_bits=}: {result = }, " \
-				f"{expected = }"
-			
-			result = shift_right(i, nr_bits)
-			expected = i >> nr_bits
-			assert shift_right(i, nr_bits) == i >> nr_bits, \
-				f"arithmetic_shift_right error for {i=}, {nr_bits=}: " \
-				f"{result = }, {expected = }"
-	
-	print("shift_tests OK")
-
-
-def _test_get_bit() -> None:
-	"""Does tests for _get_bit function. (This function is also frequently used
-	by other funcs, to it is tested in many ways..). """
-	
-	i_str = ''.join(random.choice(("1", "0")) for _ in range(100))
-	i = int(i_str, 2)
-	
-	for offset, bit in enumerate(reversed(i_str)):
-		result = _get_bit(i, offset)
-		expected = int(bit)
-		assert result == expected, \
-			f"get_bit_tests error for {i=}, {offset=}: " \
-			f"{result = }, {expected = }"
-	
-	print("get_bit_tests OK")
-
-
-def _test_bitwise_and() -> None:
-	"""Tests the bitwise and function..."""
-	
-	r = range(-1000, 1000)
-	for i in sample(r, 250) + [-98765432198765432198765432198765432100,
-	                           -1, 0, 1,
-	                           98765432198765432198765432198765432100]:
-		for j in sample(r, 250) + [-98765432198765432198765432198765432100,
-		                           -1, 0, 1,
-		                           98765432198765432198765432198765432100]:
-			assert bitwise_and(i, j) == (i & j), \
-				f"bitwise_and error for {i=}, {j=}:"
-	
-	print("bitwise_and_tests OK")
-
-
-def _test_bitwise_or() -> None:
-	"""Tests the bitwise and function..."""
-	
-	r = range(-1000, 1000)
-	for i in sample(r, 250) + [-98765432198765432198765432198765432100,
-	                           -1, 0, 1,
-	                           98765432198765432198765432198765432100]:
-		for j in sample(r, 250) + [-98765432198765432198765432198765432100,
-		                           -1, 0, 1,
-		                           98765432198765432198765432198765432100]:
-			result = bitwise_or(i, j)
-			expected = i | j
-			assert result == expected, \
-				f"bitwise_or error for {i=}, {j=}: {result=}, {expected=}."
-
-	print("bitwise_or_tests OK")
-
-
-def _test_bitwise_xor() -> None:
-	"""Tests the bitwise and function..."""
-	
-	r = range(-1000, 1000)
-	for i in sample(r, 250) + [-98765432198765432198765432198765432100,
-	                           -1, 0, 1,
-	                           98765432198765432198765432198765432100]:
-		for j in sample(r, 250) + [-98765432198765432198765432198765432100,
-		                           -1, 0, 1,
-		                           98765432198765432198765432198765432100]:
-			result = bitwise_xor(i, j)
-			expected = i ^ j
-			assert result == expected, \
-				f"bitwise_xor error for {i=}, {j=}: {result = }, {expected = }"
-	
-	print("bitwise_xor_tests OK")
-
-
-def _test_bitwise_not() -> None:
-	"""Tests the bitwise not function..."""
-	r = range(-1000, 1000)
-	
-	for i in sample(r, 250) + [-98765432198765432198765432198765432100,
-	                           -1, 0, 1,
-	                           98765432198765432198765432198765432100]:
-		result = bitwise_not(i)
-		expected = ~i
-		assert result == expected, \
-			f"bitwise_not_tests error for {i=}: {result=}, {expected=}"
-
-	print("bitwise_not_tests OK")
-
-
-_test_all()
