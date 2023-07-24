@@ -10,14 +10,9 @@ def write_ints(start: int, stop: int, nr_ints: int, filename: str) -> None:
 	with open(filename, "w") as f:
 		for i in sample(range(start, stop, 1), nr_ints):
 			f.write(str(i) + "\n")
-	
-
-def test_all() -> None:
-	_test_bit_array_sort()
-	_test_bit_array_find_missing()
 
 
-def _test_bit_array_sort() -> None:
+def test_bit_array_sort() -> None:
 	"""Test bit_array_sort function."""
 
 	# The file contains 15.000 integers (one per line) in random order from
@@ -37,7 +32,7 @@ def _test_bit_array_sort() -> None:
 	print("\nBitarray sort OK!")
 	
 
-def _test_bit_array_find_missing() -> None:
+def test_bit_array_find_missing() -> None:
 	"""Test the bit_array_get_missing function."""
 	
 	# The file contains 1.000.000 integers (one per line) in random order from

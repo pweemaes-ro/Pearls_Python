@@ -131,3 +131,18 @@ def shift_right(i: int, nr_bits: int) -> int:
 	"""Return the value of i after ARITHMATIC shift right by nr_bits."""
 	
 	return int(i // 2 ** nr_bits)
+
+
+def bit_count(i: int) -> int:
+	"""Return the number of bits set in i. Notice that this is available in
+	Python as a method on the int clsss: int.bit_count(), this is just a demo
+	of a relatively smart way to count the set bits."""
+	
+	bits_set = 0
+	
+	i = abs(i)      # Works with 'unsigned' int only!
+	while i and bits_set < 32:
+		i = bitwise_and(i, i - 1)
+		bits_set += 1
+	
+	return bits_set

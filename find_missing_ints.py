@@ -17,7 +17,7 @@ def random_str(length: int) -> str:
 	return '__' + ''.join(choice(letters) for _ in range(length))
 
 
-def find_missing_1(filename: str, max_bit_offset: int) -> int:
+def find_missing_low_memory(filename: str, max_bit_offset: int) -> int:
 	"""Return a missing number WITHOUT reading ints from input in a list or
 	using a bitmap. It recursively reads files, splits them into two files,
 	then reads and splits the smallest, until one file has NO items. Then
@@ -84,7 +84,7 @@ def find_missing_1(filename: str, max_bit_offset: int) -> int:
 	return _split_file(filename, max_bit_offset)
 
 
-def find_missing_2(filename: str, max_bit_offset: int) -> int:
+def find_missing_high_memory(filename: str, max_bit_offset: int) -> int:
 	"""Same as find_missing_1, but this version uses lists to store all
 	integers, so it only reads one file. It would be more efficient to use
 	a bitarray, but this is an exercise without any practical use..."""

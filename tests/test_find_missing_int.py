@@ -1,23 +1,18 @@
 """Tests the split_list and split_file functions"""
 from random import sample
 
-from find_missing_ints import find_missing_1, find_missing_2
+from find_missing_ints import find_missing_low_memory, find_missing_high_memory
 
 
-def test_all() -> None:
-	_test_find_missing_1()
-	_test_find_missing_2()
-	
-
-def _test_find_missing_1() -> None:
+def test_find_missing_low_memory() -> None:
 	filename = "_20bitints.txt"
-	missing = find_missing_1(filename, 19)
+	missing = find_missing_low_memory(filename, 19)
 	assert missing == 595233
 
 
-def _test_find_missing_2() -> None:
+def test_find_missing_high_memory() -> None:
 	filename = "_20bitints.txt"
-	missing = find_missing_2(filename, 19)
+	missing = find_missing_high_memory(filename, 19)
 	assert missing == 595233
 
 

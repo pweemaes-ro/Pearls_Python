@@ -2,27 +2,17 @@
 from random import sample, choice
 
 from bin_ops_sim import shift_right, shift_left, _get_bit, bitwise_and, \
-	bitwise_or, bitwise_xor, bitwise_not
+	bitwise_or, bitwise_xor, bitwise_not, bit_count
 
 
-def test_all() -> None:
-	"""Does all tests..."""
-	
-	# _test_shifts()
-	_test_get_bit()
-
-	binops_range = range(-1000, 1000)
-	binops_sample = sample(binops_range, 250) + \
-	                [-98765432198765432198765432198765432100,
-	                 -1, 0, 1,
-	                 98765432198765432198765432198765432100]
-	_test_bitwise_not(binops_sample)
-	_test_bitwise_and(binops_sample)
-	_test_bitwise_or(binops_sample)
-	_test_bitwise_xor(binops_sample)
+binops_range = range(-1000, 1000)
+binops_sample = sample(binops_range, 250) + \
+                [-98765432198765432198765432198765432100,
+                 -1, 0, 1,
+                 98765432198765432198765432198765432100]
 
 
-def _test_shifts() -> None:
+def test_shifts() -> None:
 	"""Tests shift_left and shit_rught functions...."""
 	
 	test_sample = sample(range(-100_000, 100_000), 200)
@@ -44,7 +34,7 @@ def _test_shifts() -> None:
 	print("shift_tests OK")
 
 
-def _test_get_bit() -> None:
+def test_get_bit() -> None:
 	"""Does tests for _get_bit function. (This function is also frequently used
 	by other funcs, to it is tested in many ways..). """
 	
@@ -61,8 +51,9 @@ def _test_get_bit() -> None:
 	print("\nget_bit_tests OK")
 
 
-def _test_bitwise_and(binops_sample: list[int]) -> None:
+def test_bitwise_and() -> None:
 	"""Tests the bitwise and function..."""
+	global binops_sample
 	
 	for i in binops_sample:
 		for j in binops_sample:
@@ -74,8 +65,9 @@ def _test_bitwise_and(binops_sample: list[int]) -> None:
 	print("bitwise_and_tests OK")
 
 
-def _test_bitwise_or(binops_sample: list[int]) -> None:
+def test_bitwise_or() -> None:
 	"""Tests the bitwise and function..."""
+	global binops_sample
 	
 	for i in binops_sample:
 		for j in binops_sample:
@@ -87,8 +79,9 @@ def _test_bitwise_or(binops_sample: list[int]) -> None:
 	print("bitwise_or_tests OK")
 
 
-def _test_bitwise_xor(binops_sample: list[int]) -> None:
+def test_bitwise_xor() -> None:
 	"""Tests the bitwise and function..."""
+	global binops_sample
 	
 	for i in binops_sample:
 		for j in binops_sample:
@@ -100,9 +93,10 @@ def _test_bitwise_xor(binops_sample: list[int]) -> None:
 	print("bitwise_xor_tests OK")
 
 
-def _test_bitwise_not(binops_sample: list[int]) -> None:
+def test_bitwise_not() -> None:
 	"""Tests the bitwise not function..."""
-
+	global binops_sample
+	
 	for i in binops_sample:
 		result = bitwise_not(i)
 		expected = ~i
@@ -110,3 +104,9 @@ def _test_bitwise_not(binops_sample: list[int]) -> None:
 			f"bitwise_not_tests error for {i=}: {result=}, {expected=}"
 	
 	print("bitwise_not_tests OK")
+
+
+def test_bit_count() -> None:
+	s = sample(range(-1_000_000, 1_000_000), 100)
+	for i in s:
+		assert bit_count(i) == i.bit_count()
