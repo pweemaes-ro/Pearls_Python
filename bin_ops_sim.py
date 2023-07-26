@@ -134,14 +134,15 @@ def shift_right(i: int, nr_bits: int) -> int:
 
 
 def bit_count(i: int) -> int:
-	"""Return the number of bits set in i. Notice that this is available in
-	Python as a method on the int clsss: int.bit_count(), this is just a demo
-	of a relatively smart way to count the set bits."""
+	"""Return the number of bits set in i (excluding the sign bit if i < 0!).
+	Notice that this functionallity is available in Python as a method on the
+	int clsss: int.bit_count(), this is just a demo of a relatively smart way
+	to count the set bits."""
 	
 	bits_set = 0
 	
 	i = abs(i)      # Works with 'unsigned' int only!
-	while i and bits_set < 32:
+	while i:
 		i = bitwise_and(i, i - 1)
 		bits_set += 1
 	
