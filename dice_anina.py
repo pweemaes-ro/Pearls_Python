@@ -1,8 +1,5 @@
 """ Dice problem Anina"""
-from __future__ import annotations
 from typing import Optional
-
-faces = ('UP', 'DOWN', 'LEFT', 'RIGHT', 'FRONT', 'BACK')
 
 
 class Dice:
@@ -10,47 +7,43 @@ class Dice:
 	a time), its faces can be queried for their values, and it can produce a
 	string representation of itself."""
 	
-	__transformations = {'L': "ULDR", 'R': "RDLU", 'F': "UFDB", 'B': "BDFU"}
+	__faces = 'UDLRFB'
+	__transforms = {'L': "ULDRUFFBB", 'R': "RDLURFFBB", 'F': "UFDBULLRR",
+	                'B': "BDFUBLLRR"}
 
-	def __init__(self, values_and_faces: dict[str, str]) -> None:
-		self._values_and_faces = values_and_faces
-
+	def __init__(self, faces_2_values: dict[str, str]) -> None:
+		self._dice = {v: k for (k, v) in faces_2_values.items()}
+		self._modified = True
+		self._faces_and_values = dict(faces_2_values)
+		
 	def roll(self, roll: str) -> None:
 		"""Roll in specified direction ('L', 'R', 'F', or 'D')."""
 		
-		transformation = self.__transformations[roll]
-		new_dice = dict()
-		new_dice.update(self._values_and_faces)
-		for value, current_face in self._values_and_faces.items():
-			if (current_face_index := transformation.find(current_face)) != -1:
-				new_dice[value] = transformation[(current_face_index + 1) % 4]
-		self._values_and_faces = new_dice
-
+		transform = self.__transforms[roll]
+		new_dice = dict(self._dice)
+		for value, current_face in self._dice.items():
+			new_dice[value] = transform[(transform.find(current_face) + 1)]
+		self._dice = new_dice
+		self._modified = True
+		
 	def get_face_value(self, face: str) -> Optional[str]:
 		"""Return the current value at face (or None if face invalid)."""
-		
-		for value, _face in self._values_and_faces.items():
-			if face[0] == _face:
-				return value
-		return None
 
-	def __str__(self) -> str:
-		return '\n'.join(f"letter on {face} face = "
-		                 f"{self.get_face_value(face)}"
-		                 for face in faces)
-	
+		if self._modified:
+			self._faces_and_values = {v: k for (k, v) in self._dice.items()}
+			self._modified = False
+		return self._faces_and_values[face]
+
 	def __repr__(self) -> str:
-		return f"{self.__class__.__qualname__}({self._values_and_faces})"
+		return f"{self.__class__.__qualname__}({self._dice})"
 
 
 if __name__ == "__main__":
 
-	dice = Dice({'A': 'B', 'B': 'R', 'C': 'F', 'D': 'U', 'E': 'L', 'F': 'D'})
+	dice = Dice(dict(zip("BRFULD", "ABCDEF")))
 
 	for _roll in "LLFFRR":
 		dice.roll(_roll)
 
-	face_to_query = 'UP'     # we are interested in value at 'UP' face.
-	print(f"Current letter on {face_to_query} side of the dice: "
-	      f"{dice.get_face_value(face_to_query)}")
-	print(dice)
+	for _face in 'UDLRFB':
+		print(f"Current letter on {_face} side = {dice.get_face_value(_face)}")
