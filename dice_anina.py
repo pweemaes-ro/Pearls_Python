@@ -1,5 +1,4 @@
 """ Dice problem Anina"""
-from typing import Optional
 
 
 class Dice:
@@ -26,7 +25,7 @@ class Dice:
 		self._dice = new_dice
 		self._modified = True
 		
-	def get_face_value(self, face: str) -> Optional[str]:
+	def get_face_value(self, face: str) -> str:
 		"""Return the current value at face (or None if face invalid)."""
 
 		if self._modified:
