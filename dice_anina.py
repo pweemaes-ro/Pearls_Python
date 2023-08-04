@@ -7,7 +7,7 @@ faces = ('UP', 'DOWN', 'LEFT', 'RIGHT', 'FRONT', 'BACK')
 
 class Dice:
 	"""Simple class to mimic a dice. It can roll (in one of four directions at
-	a time), it's faces can be queried for their values, and it can produce a
+	a time), its faces can be queried for their values, and it can produce a
 	string representation of itself."""
 	
 	__transformations = {'L': "ULDR", 'R': "RDLU", 'F': "UFDB", 'B': "BDFU"}
