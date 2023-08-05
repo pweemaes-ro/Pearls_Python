@@ -1,4 +1,5 @@
 """ Dice problem Anina"""
+from typing import Any
 
 
 class Dice(dict[str, str]):
@@ -36,6 +37,12 @@ class Dice(dict[str, str]):
 		"""Return value at face (face in ('U', 'D', 'L', 'R', 'F', 'B'))."""
 
 		return self._faces_2_values[face]
+
+	def __eq__(self, other: Any) -> bool:
+		if isinstance(other, Dice):
+			return self.items() == other.items()
+		else:
+			return False
 
 
 if __name__ == "__main__":
