@@ -2,7 +2,7 @@
 
 
 class Dice(dict[str, str]):
-	"""A dice has 8 faces: Up (U), down (D), left (L), right (R), front (F) and
+	"""A dice has 6 faces: Up (U), down (D), left (L), right (R), front (F) and
 	back (B). It can roll to left (L), right (R), front(F) or back (B). Its
 	faces can be queried for their value."""
 	
