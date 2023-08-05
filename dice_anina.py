@@ -8,7 +8,7 @@ class Dice(dict[str, str]):
 	
 	# Transform strings describe changes for a given roll: For each face, find
 	# the 1st occurence of its letter. The next letter is the next location. So
-	# 'L': "ULDRU" means: an left roll brings value at U face to L face, value
+	# 'L': "ULDRU" means: a left roll brings value at U face to L face, value
 	# at L face to D face, value at D face to R face, and value at R face to U
 	# face. Values at F and B faces DON'T move!
 	__transforms = {'L': "ULDRU", 'R': "RDLUR", 'F': "UFDBU", 'B': "BDFUB"}
