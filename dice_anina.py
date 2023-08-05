@@ -11,7 +11,7 @@ class Dice(dict[str, str]):
 	# 'L': "ULDRU" means: a left roll brings value at U face to L face, value
 	# at L face to D face, value at D face to R face, and value at R face to U
 	# face. Values at F and B faces DON'T move!
-	__transforms = {'L': "ULDRU", 'R': "RDLUR", 'F': "UFDBU", 'B': "BDFUB"}
+	__transforms = {'L': "LDRUL", 'R': "RDLUR", 'F': "FDBUF", 'B': "BDFUB"}
 
 	def __init__(self, faces: tuple[str, ...], values: tuple[str, ...]) -> None:
 		super().__init__(zip(values, faces))
